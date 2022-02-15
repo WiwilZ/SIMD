@@ -2,7 +2,7 @@
 使用SIMD指令集实现`C`语言标准库`<string.h>`中的一些函数
 1. - [ ] void* memchr(const void* str, int c, size_t n)
 2. - [ ] int memcmp(const void* str1, const void* str2, size_t n)
-3. - [ ]	void* memcpy(void* dest, const void* src, size_t n)
+3. - [X]	void* memcpy(void* dest, const void* src, size_t n)
 4. - [ ]	void* memmove(void* dest, const void* src, size_t n)
 5. - [ ]	void* memset(void* str, int c, size_t n)
 6. - [ ]	char* strcat(char* dest, const char* src)
