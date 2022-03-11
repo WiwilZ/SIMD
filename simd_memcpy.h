@@ -13,46 +13,45 @@
 constexpr void* avx512_memcpy(void* __restrict dst, const void* __restrict src, size_t size) noexcept __attribute__((__nonnull__(1, 2)));
 
 
-static __inline void __attribute__((__always_inline__)) copy1B(std::byte* dst, const std::byte* src) noexcept {
-    *dst = *src;
+inline __attribute__((always_inline)) void copy1B(void* dst, const void* src) noexcept {
+    *static_cast<uint8_t*>(dst) = *static_cast<const uint8_t*>(src);
 }
 
-static __inline void __attribute__((__always_inline__)) copy2B(std::byte* dst, const std::byte* src) noexcept {
-    *reinterpret_cast<uint16_t*>(dst) = *reinterpret_cast<const uint16_t*>(src);
+inline __attribute__((always_inline)) void copy2B(void* dst, const void* src) noexcept {
+    *static_cast<uint16_t*>(dst) = *static_cast<const uint16_t*>(src);
 }
 
-static __inline void __attribute__((__always_inline__)) copy4B(std::byte* dst, const std::byte* src) noexcept {
-    *reinterpret_cast<uint32_t*>(dst) = *reinterpret_cast<const uint32_t*>(src);
+inline __attribute__((always_inline)) void copy4B(void* dst, const void* src) noexcept {
+    *static_cast<uint32_t*>(dst) = *static_cast<const uint32_t*>(src);
 }
 
-static __inline void __attribute__((__always_inline__)) copy8B(std::byte* dst, const std::byte* src) noexcept {
-    *reinterpret_cast<uint64_t*>(dst) = *reinterpret_cast<const uint64_t*>(src);
+inline __attribute__((always_inline)) void copy8B(void* dst, const void* src) noexcept {
+    *static_cast<uint64_t*>(dst) = *static_cast<const uint64_t*>(src);
 }
 
-static __inline void __attribute__((__always_inline__)) copy16B(std::byte* dst, const std::byte* src) noexcept {
-    *(__uint128_t*) dst = *(__uint128_t*) src;
-    _mm_storeu_si128(reinterpret_cast<__m128i*>(dst), _mm_lddqu_si128(reinterpret_cast<const __m128i*>(src)));
+inline __attribute__((always_inline)) void copy16B(void* dst, const void* src) noexcept {
+    _mm_storeu_si128(static_cast<__m128i*>(dst), _mm_lddqu_si128(static_cast<const __m128i*>(src)));
 }
 
-static __inline void __attribute__((__always_inline__)) copy32B(std::byte* dst, const std::byte* src) noexcept {
-    _mm256_storeu_si256(reinterpret_cast<__m256i*>(dst), _mm256_lddqu_si256(reinterpret_cast<const __m256i*>(src)));
+inline __attribute__((always_inline)) void copy32B(void* dst, const void* src) noexcept {
+    _mm256_storeu_si256(static_cast<__m256i*>(dst), _mm256_lddqu_si256(static_cast<const __m256i*>(src)));
 }
 
-static __inline void __attribute__((__always_inline__)) copy64B(std::byte* dst, const std::byte* src) noexcept {
+inline __attribute__((always_inline)) void copy64B(void* dst, const void* src) noexcept {
     _mm512_storeu_si512(dst, _mm512_loadu_si512(src));
 }
 
-#define LOAD(i) __m512i zmm##i = _mm512_loadu_si512(reinterpret_cast<const __m512i*>(src) + i);
-#define STORE(i) _mm512_storeu_si512(reinterpret_cast<__m512i*>(dst) + i, zmm##i);
+#define LOAD(i) const __m512i zmm##i = _mm512_loadu_si512(static_cast<const __m512i*>(src) + i);
+#define STORE(i) _mm512_storeu_si512(static_cast<__m512i*>(dst) + i, zmm##i);
 
-static __inline void __attribute__((__always_inline__)) copy128B(std::byte* dst, const std::byte* src) noexcept {
+inline __attribute__((always_inline)) void copy128B(void* dst, const void* src) noexcept {
     LOAD(0)
     LOAD(1)
     STORE(0)
     STORE(1)
 }
 
-static __inline void __attribute__((__always_inline__)) copy256B(std::byte* dst, const std::byte* src) noexcept {
+inline __attribute__((always_inline)) void copy256B(void* dst, const void* src) noexcept {
     LOAD(0)
     LOAD(1)
     LOAD(2)
@@ -63,7 +62,7 @@ static __inline void __attribute__((__always_inline__)) copy256B(std::byte* dst,
     STORE(3)
 }
 
-static __inline void __attribute__((__always_inline__)) copy512B(std::byte* dst, const std::byte* src) noexcept {
+inline __attribute__((always_inline)) void copy512B(void* dst, const void* src) noexcept {
     LOAD(0)
     LOAD(1)
     LOAD(2)
@@ -82,7 +81,7 @@ static __inline void __attribute__((__always_inline__)) copy512B(std::byte* dst,
     STORE(7)
 }
 
-static __inline void __attribute__((__always_inline__)) copy1024B(std::byte* dst, const std::byte* src) noexcept {
+inline __attribute__((always_inline)) void copy1024B(void* dst, const void* src) noexcept {
     LOAD(0)
     LOAD(1)
     LOAD(2)
@@ -117,7 +116,7 @@ static __inline void __attribute__((__always_inline__)) copy1024B(std::byte* dst
     STORE(15)
 }
 // AVX-512有32个寄存器
-static __inline void __attribute__((__always_inline__)) copy2048B(std::byte* dst, const std::byte* src) noexcept {
+inline __attribute__((always_inline)) void copy2048B(void* dst, const void* src) noexcept {
     LOAD(0)
     LOAD(1)
     LOAD(2)
