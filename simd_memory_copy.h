@@ -8,7 +8,7 @@
 #include "copy_backwards.h"
 
 
-void* simd_memory_copy(void* dest, const void* src, size_t size) {
+constexpr void* simd_memory_copy(void* dest, const void* src, size_t size) noexcept {
     if (dest != src) {
         auto pd = static_cast<std::byte*>(dest);
         auto ps = static_cast<const std::byte*>(src);

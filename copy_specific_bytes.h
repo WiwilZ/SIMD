@@ -57,7 +57,7 @@ namespace my {
         _mm512_stream_si512(static_cast<__m512i*>(dest), _mm512_stream_load_si512(const_cast<void*>(src)));
     }
 
-#define LOAD(i) const __m512i zmm##i = _mm512_stream_load_si512(static_cast<__m512i*>(const_cast<void*>(src)) + i);
+#define LOAD(i) auto zmm##i = _mm512_stream_load_si512(static_cast<__m512i*>(const_cast<void*>(src)) + i);
 #define STORE(i) _mm512_stream_si512(static_cast<__m512i*>(dest) + i, zmm##i);
 
     template <>
@@ -224,7 +224,7 @@ namespace my {
         _mm512_stream_si512(static_cast<__m512i*>(dest), _mm512_load_si512(src));
     }
 
-#define LOAD(i) const __m512i zmm##i = _mm512_load_si512(static_cast<const __m512i*>(src) + i);
+#define LOAD(i) auto zmm##i = _mm512_load_si512(static_cast<const __m512i*>(src) + i);
 #define STORE(i) _mm512_stream_si512(static_cast<__m512i*>(dest) + i, zmm##i);
 
     template <>
@@ -391,7 +391,7 @@ namespace my {
         _mm512_stream_si512(static_cast<__m512i*>(dest), _mm512_loadu_si512(src));
     }
 
-#define LOAD(i) const __m512i zmm##i = _mm512_loadu_si512(static_cast<const __m512i*>(src) + i);
+#define LOAD(i) auto zmm##i = _mm512_loadu_si512(static_cast<const __m512i*>(src) + i);
 #define STORE(i) _mm512_stream_si512(static_cast<__m512i*>(dest) + i, zmm##i);
 
     template <>
@@ -559,7 +559,7 @@ namespace my {
         _mm512_store_si512(dest, _mm512_stream_load_si512(const_cast<void*>(src)));
     }
 
-#define LOAD(i) const __m512i zmm##i = _mm512_stream_load_si512(static_cast<__m512i*>(const_cast<void*>(src)) + i);
+#define LOAD(i) auto zmm##i = _mm512_stream_load_si512(static_cast<__m512i*>(const_cast<void*>(src)) + i);
 #define STORE(i) _mm512_store_si512(static_cast<__m512i*>(dest) + i, zmm##i);
 
     template <>
@@ -726,7 +726,7 @@ namespace my {
         _mm512_store_si512(dest, _mm512_load_si512(src));
     }
 
-#define LOAD(i) const __m512i zmm##i = _mm512_load_si512(static_cast<const __m512i*>(src) + i);
+#define LOAD(i) auto zmm##i = _mm512_load_si512(static_cast<const __m512i*>(src) + i);
 #define STORE(i) _mm512_store_si512(static_cast<__m512i*>(dest) + i, zmm##i);
 
     template <>
@@ -893,7 +893,7 @@ namespace my {
         _mm512_store_si512(dest, _mm512_loadu_si512(src));
     }
 
-#define LOAD(i) const __m512i zmm##i = _mm512_loadu_si512(static_cast<const __m512i*>(src) + i);
+#define LOAD(i) auto zmm##i = _mm512_loadu_si512(static_cast<const __m512i*>(src) + i);
 #define STORE(i) _mm512_store_si512(static_cast<__m512i*>(dest) + i, zmm##i);
 
     template <>
@@ -1061,7 +1061,7 @@ namespace my {
         _mm512_storeu_si512(dest, _mm512_stream_load_si512(const_cast<void*>(src)));
     }
 
-#define LOAD(i) const __m512i zmm##i = _mm512_stream_load_si512(static_cast<__m512i*>(const_cast<void*>(src)) + i);
+#define LOAD(i) auto zmm##i = _mm512_stream_load_si512(static_cast<__m512i*>(const_cast<void*>(src)) + i);
 #define STORE(i) _mm512_storeu_si512(static_cast<__m512i*>(dest) + i, zmm##i);
 
     template <>
@@ -1228,7 +1228,7 @@ namespace my {
         _mm512_storeu_si512(dest, _mm512_load_si512(src));
     }
 
-#define LOAD(i) const __m512i zmm##i = _mm512_load_si512(static_cast<const __m512i*>(src) + i);
+#define LOAD(i) auto zmm##i = _mm512_load_si512(static_cast<const __m512i*>(src) + i);
 #define STORE(i) _mm512_storeu_si512(static_cast<__m512i*>(dest) + i, zmm##i);
 
     template <>
@@ -1395,7 +1395,7 @@ namespace my {
         _mm512_storeu_si512(dest, _mm512_loadu_si512(src));
     }
 
-#define LOAD(i) const __m512i zmm##i = _mm512_loadu_si512(static_cast<const __m512i*>(src) + i);
+#define LOAD(i) auto zmm##i = _mm512_loadu_si512(static_cast<const __m512i*>(src) + i);
 #define STORE(i) _mm512_storeu_si512(static_cast<__m512i*>(dest) + i, zmm##i);
 
     template <>
@@ -1547,18 +1547,5 @@ namespace my {
 
 /*--------------------------------unaligned unaligned-------------------------------*/
 
-
-    template <size_t I>
-    inline constexpr bool Copy_diff_single(size_t size, std::byte* p, const std::byte* q) noexcept {
-        if (size == I) {
-            copy_bytes<I, -1, -1>(p, q);
-            return true;
-        }
-        return false;
-    }
-
-    template <size_t... Is>
-    inline constexpr void Copy_diff(size_t size, std::byte* p, const std::byte* q) {
-        (Copy_diff_single<Is>(size, p, q) || ...);
-    }
+    constexpr void _placeholder(std::byte* pd, const std::byte* ps, size_t size) noexcept {}
 }
